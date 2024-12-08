@@ -1,20 +1,9 @@
-import { AppBar, Toolbar, Typography, Button, Container, Box, Paper } from "@mui/material";
+import { Typography, Button, Container, Box, Paper } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 
 export default function HomePage() {
     return (
         <div>
-            {/* Fixed Header */}
-            <AppBar position="fixed">
-                <Toolbar>
-                    <Typography variant="h6" sx={{flexGrow: 1}} textAlign={"left"}>
-                        FlexiGrid
-                    </Typography>
-                    <Button color="inherit">Home</Button>
-                    <Button color="inherit">Data Models</Button>
-                    <Button color="inherit">About</Button>
-                </Toolbar>
-            </AppBar>
 
             {/* Hero Section */}
             <Box
@@ -27,15 +16,9 @@ export default function HomePage() {
                     textAlign: "center",
                 }}
             >
-                <Typography variant="h2">
-                    Welcome to FlexiGrid
-                </Typography>
-                <Typography variant="h6">
-                    Explore, Filter, and Manage Your Data Seamlessly
-                </Typography>
-                <Button variant="contained">
-                    Get Started
-                </Button>
+                <Typography variant="h2">Welcome to FlexiGrid</Typography>
+                <Typography variant="h6">Explore, Filter, and Manage Your Data Seamlessly</Typography>
+                <Button variant="contained">Get Started</Button>
             </Box>
 
             {/* Main Content Section */}
@@ -78,22 +61,6 @@ export default function HomePage() {
                     </Grid>
                 </Grid>
             </Container>
-
-            {/* Fixed Footer */}
-            <Box
-                bgcolor="text.secondary"
-                py={0.5}
-                textAlign="center"
-                sx={{
-                    position: "fixed",
-                    bottom: 0,
-                    width: "100%"
-                }}
-            >
-                <Typography variant="body2">
-                    © {new Date().getFullYear()} FlexiGrid. All rights reserved.
-                </Typography>
-            </Box>
         </div>
     );
 }
