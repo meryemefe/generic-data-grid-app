@@ -1,6 +1,7 @@
 import "./App.css";
 import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import CreateOrImportModel from "./CreateOrImportModel.tsx";
 import DataModels from "./DataModels.tsx";
 import HomePage from "./Homepage.tsx";
 
@@ -29,6 +30,7 @@ function App() {
                 <Routes>
                     <Route path="/" element={<HomePage/>}/>
                     <Route path="/data-models" element={<DataModels/>}/>
+                    <Route path="/create-or-import-model" element={<CreateOrImportModel/>}/>
                 </Routes>
 
                 {/* Fixed Footer */}
