@@ -3,6 +3,7 @@ import express from "express";
 import cors from 'cors';
 import morgan from "morgan";
 import { connectToDB } from "./config/db";
+import modelRoutes from "./routes/modelRoutes";
 
 dotenv.config();
 
@@ -21,7 +22,8 @@ const startServer = async () => {
         // Morgan middleware configuration to use Winston for logging
         app.use(morgan('dev'));
 
-        // TODO Initialize routes
+        // Initialize routes
+        app.use('/', modelRoutes)
 
 
         // Listen to the port
