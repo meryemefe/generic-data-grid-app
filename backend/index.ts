@@ -1,16 +1,37 @@
-import express, { Express, Request, Response, Application } from 'express';
 import dotenv from 'dotenv';
+import express from "express";
+import cors from 'cors';
+import morgan from "morgan";
+import { connectToDB } from "./config/db";
 
-//For env File
 dotenv.config();
 
-const app: Application = express();
+const app = express();
 const port = process.env.PORT || 8000;
 
-app.get('/', (req: Request, res: Response) => {
-    res.send('Welcome to Express & TypeScript Server');
-});
+// Middleware
+app.use(express.json());
+app.use(cors());
 
-app.listen(port, () => {
-    console.log(`Server is Fire at http://localhost:${port}`);
-});
+const startServer = async () => {
+    try {
+        // Connect to the database
+        await connectToDB();
+
+        // Morgan middleware configuration to use Winston for logging
+        app.use(morgan('dev'));
+
+        // TODO Initialize routes
+
+
+        // Listen to the port
+        app.listen(port, () => {
+            console.log(`Server is running at port ${port}`);
+        });
+    } catch (error) {
+        console.error(error);
+        process.exit(1);
+    }
+};
+
+startServer()
