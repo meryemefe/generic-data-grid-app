@@ -8,8 +8,8 @@ export const createModel = async (req: Request, res: Response, next: NextFunctio
         const {name, fields} = req.body;
 
         // Validate inputs
-        if (!name || !fields) {
-            return res.status(400).json({message: "Name and fields are required"});
+        if (!name || !fields || !Array.isArray(fields) || fields.length === 0) {
+            return res.status(400).json({message: "Name and valid fields are required"});
         }
 
         const db = getDb(); // Get the database instance
@@ -20,13 +20,22 @@ export const createModel = async (req: Request, res: Response, next: NextFunctio
             return res.status(400).json({message: `Model '${name}' already exists`});
         }
 
-        // Create collection (MongoDB doesn't enforce schemas but we'll save metadata)
+        // Convert fields to metadata schema
+        const schemaFields = fields.reduce((acc: Record<string, any>, field: { name: string; type: string }) => {
+            if (!field.name || !field.type || !["text", "number", "date"].includes(field.type)) {
+                throw new Error("Invalid field format");
+            }
+            acc[field.name] = {type: field.type};
+            return acc;
+        }, {});
+
+        // Create collection
         await db.createCollection(name);
 
         // Save metadata
         await db.collection("CollectionMetadata").insertOne({
             name,
-            fields,
+            fields: schemaFields,
             createdAt: new Date(),
         });
 

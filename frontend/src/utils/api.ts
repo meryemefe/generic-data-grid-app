@@ -1,6 +1,9 @@
 const API_URL = import.meta.env.VITE_API_URL as string;
 
-export async function createModel(name: string, fields: string[]): Promise<any> {
+export async function createModel(
+    name: string,
+    fields: { name: string; type: string }[]
+): Promise<any> {
     try {
         const response = await fetch(`${API_URL}/models`, {
             method: "POST",
