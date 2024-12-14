@@ -9,12 +9,17 @@ import {
     Container,
     CircularProgress,
     Alert,
+    IconButton,
+    MenuItem,
 } from "@mui/material";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { createModel, importModel } from "./utils/api";
 import FileUploader from "./components/FileUploader";
+
+const COLUMN_TYPES = ["text", "number", "date"];
 
 export default function CreateOrImportModel() {
     const [tabIndex, setTabIndex] = useState("1");
@@ -23,6 +28,9 @@ export default function CreateOrImportModel() {
     const [error, setError] = useState<string | null>(null);
     const [file, setFile] = useState<File | null>(null);
     const [modelName, setModelName] = useState("");
+    const [fields, setFields] = useState<{ name: string; type: string }[]>([
+        {name: "", type: "text"},
+    ]);
 
     const handleTabChange = (_event: React.SyntheticEvent, newValue: string) => {
         setTabIndex(newValue);
@@ -37,9 +45,11 @@ export default function CreateOrImportModel() {
         setLoading(true);
 
         try {
-            const formData = new FormData(event.currentTarget);
-            const modelName = formData.get("name") as string;
-            const fields = (formData.get("fields") as string).split(",").map((f) => f.trim());
+            if (!modelName || fields.length === 0 || fields.some((field) => !field.name || !field.type)) {
+                setError("Please provide a model name and valid fields.");
+                setLoading(false);
+                return;
+            }
 
             const response = await createModel(modelName, fields);
             setMessage(`Model "${response.name}" created successfully!`);
@@ -71,6 +81,22 @@ export default function CreateOrImportModel() {
         }
     };
 
+    const handleAddField = () => {
+        setFields([...fields, {name: "", type: "text"}]);
+    };
+
+    const handleFieldChange = (index: number, key: string, value: string) => {
+        const updatedFields = fields.map((field, i) =>
+            i === index ? {...field, [key]: value} : field
+        );
+        setFields(updatedFields);
+    };
+
+    const handleRemoveField = (index: number) => {
+        const updatedFields = fields.filter((_, i) => i !== index);
+        setFields(updatedFields);
+    };
+
     return (
         <Container>
             <Typography variant="h4" align="center" gutterBottom>
@@ -84,6 +110,7 @@ export default function CreateOrImportModel() {
                         <Tab label="Create Model Manually" value="2"/>
                     </TabList>
 
+                    {/* Import Model Tab */}
                     <TabPanel value="1">
                         <Typography variant="h6" gutterBottom>
                             Import Model from CSV
@@ -93,7 +120,7 @@ export default function CreateOrImportModel() {
                                 display: "flex",
                                 flexDirection: "column",
                                 gap: "15px",
-                                maxWidth: "500px",
+                                maxWidth: "600px",
                                 margin: "0 auto",
                             }}
                         >
@@ -119,6 +146,7 @@ export default function CreateOrImportModel() {
                         </Box>
                     </TabPanel>
 
+                    {/* Create Model Manually Tab */}
                     <TabPanel value="2">
                         <Typography variant="h6" gutterBottom>
                             Create New Model
@@ -130,18 +158,80 @@ export default function CreateOrImportModel() {
                                 display: "flex",
                                 flexDirection: "column",
                                 gap: "15px",
-                                maxWidth: "500px",
+                                maxWidth: "600px",
                                 margin: "0 auto",
                             }}
                         >
-                            <TextField label="Model Name" name="name" variant="outlined" required/>
                             <TextField
-                                label="Fields (comma-separated)"
-                                name="fields"
+                                label="Model Name"
                                 variant="outlined"
+                                value={modelName}
+                                onChange={(e) => setModelName(e.target.value)}
                                 required
                             />
-                            <Button type="submit" variant="contained" color="primary" disabled={loading}>
+
+                            <Typography variant="h6" sx={{mt: 2}}>
+                                Define Fields
+                            </Typography>
+                            {fields.map((field, index) => (
+                                <Box
+                                    key={index}
+                                    sx={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: "10px",
+                                        marginBottom: "10px",
+                                    }}
+                                >
+                                    <TextField
+                                        label={`Field Name ${index + 1}`}
+                                        value={field.name}
+                                        onChange={(e) =>
+                                            handleFieldChange(index, "name", e.target.value)
+                                        }
+                                        required
+                                        fullWidth
+                                        sx={{flex: 2}}
+                                    />
+                                    <TextField
+                                        select
+                                        label="Field Type"
+                                        value={field.type}
+                                        onChange={(e) =>
+                                            handleFieldChange(index, "type", e.target.value)
+                                        }
+                                        required
+                                        sx={{flex: 1}}
+                                    >
+                                        {COLUMN_TYPES.map((type) => (
+                                            <MenuItem key={type} value={type}>
+                                                {type}
+                                            </MenuItem>
+                                        ))}
+                                    </TextField>
+                                    <IconButton
+                                        color="error"
+                                        onClick={() => handleRemoveField(index)}
+                                        sx={{flexShrink: 0}}
+                                    >
+                                        <DeleteIcon/>
+                                    </IconButton>
+                                </Box>
+                            ))}
+                            <Button
+                                variant="outlined"
+                                onClick={handleAddField}
+                                disabled={fields.length >= 20}
+                            >
+                                Add Field
+                            </Button>
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                color="primary"
+                                disabled={loading}
+                                sx={{mt: 2}}
+                            >
                                 {loading ? <CircularProgress size={24}/> : "Create Model"}
                             </Button>
                         </Box>
