@@ -2,8 +2,9 @@ import "./App.css";
 import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import CreateOrImportModel from "./CreateOrImportModel.tsx";
-import DataModels from "./DataModels.tsx";
+import ModelsPage from "./ModelsPage.tsx";
 import HomePage from "./Homepage.tsx";
+import DataPage from "./DataPage.tsx";
 
 function App() {
 
@@ -19,7 +20,7 @@ function App() {
                         <Button color="inherit" component={Link} to="/">
                             Home
                         </Button>
-                        <Button color="inherit" component={Link} to="/data-models">
+                        <Button color="inherit" component={Link} to="/models">
                             Data Models
                         </Button>
                         <Button color="inherit">About</Button>
@@ -29,8 +30,9 @@ function App() {
                 {/* Define Routes */}
                 <Routes>
                     <Route path="/" element={<HomePage/>}/>
-                    <Route path="/data-models" element={<DataModels/>}/>
+                    <Route path="/models" element={<ModelsPage/>}/>
                     <Route path="/create-or-import-model" element={<CreateOrImportModel/>}/>
+                    <Route path="/models/:name" element={<DataPage/>}/>
                 </Routes>
 
                 {/* Fixed Footer */}
