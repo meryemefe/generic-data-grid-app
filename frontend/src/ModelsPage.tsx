@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Button, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { GenericDataGrid } from "./GenericDataGrid";
@@ -7,8 +6,7 @@ import { deleteModel, listModels } from "./utils/api";
 
 export default function ModelsPage() {
     const navigate = useNavigate();
-    const [columns] = useState(["name", "createdAt"]); // Predefined columns for models listing
-
+    const columns = {name: {type: "string"}, createdAt: {type: "date"}}; // Predefined columns for models listing
     const loadModels = async ({page, pageSize, sortField, sortOrder, filter}: {
         page: number;
         pageSize: number;

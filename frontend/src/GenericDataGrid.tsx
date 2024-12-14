@@ -7,7 +7,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 interface GenericDataGridProps {
-    columns: string[];
+    columns: Record<string, { type: string }>;
     onLoadData: (params: {
         page: number;
         pageSize: number;
@@ -64,12 +64,25 @@ export const GenericDataGrid = ({
         params.api.setGridOption('serverSideDatasource', datasource);
     };
 
+    const getFilterType = (type: string) => {
+        switch (type) {
+            case "number":
+                return "agNumberColumnFilter";
+            case "date":
+                return "agDateColumnFilter";
+            default:
+                return "agTextColumnFilter";
+        }
+    };
+
+
     const getColumnDefs = () => {
-        const baseColumns = columns.map((column) => ({
-            headerName: column,
-            field: column,
+        const baseColumns = Object.entries(columns).map(([key, value]) => ({
+            headerName: key,
+            field: key,
+            filter: getFilterType(value.type),
             sortable: true,
-            filter: "agTextColumnFilter",
+            resizable: true,
         }));
 
         if (showEdit || showDelete) {

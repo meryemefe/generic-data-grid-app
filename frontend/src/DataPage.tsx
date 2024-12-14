@@ -7,7 +7,7 @@ import { deleteGenericData, listGenericData } from "./utils/api";
 export default function DataPage() {
     const {name} = useParams<{ name: string }>();
     const navigate = useNavigate();
-    const [columns, setColumns] = useState<string[]>([]);
+    const [columns, setColumns] = useState<Record<string, { type: string }>>({}); // Updated for field types
 
     const loadData = async ({
                                 page,
@@ -27,7 +27,7 @@ export default function DataPage() {
         const response = await listGenericData(name as string, {page, pageSize, sortField, sortOrder, filter});
 
         // Dynamically set columns based on backend fields
-        if (columns.length === 0 && response.fields?.length > 0) {
+        if (Object.keys(columns).length === 0 && Object.keys(response.fields).length > 0) {
             setColumns(response.fields);
         }
 
