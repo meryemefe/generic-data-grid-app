@@ -2,6 +2,9 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-enterprise";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
+import { IconButton } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 interface GenericDataGridProps {
     columns: string[];
@@ -13,10 +16,21 @@ interface GenericDataGridProps {
         filter?: Record<string, any>;
     }) => Promise<{ data: any[]; total: number }>;
     onRowDoubleClick?: (row: any) => void;
+    onEdit?: (row: any) => void;
+    onDelete?: (row: any) => void;
+    showEdit?: boolean;
+    showDelete?: boolean;
 }
 
-export const GenericDataGrid = ({columns, onLoadData, onRowDoubleClick}: GenericDataGridProps) => {
-
+export const GenericDataGrid = ({
+                                    columns,
+                                    onLoadData,
+                                    onRowDoubleClick,
+                                    onEdit,
+                                    onDelete,
+                                    showEdit = false,
+                                    showDelete = false,
+                                }: GenericDataGridProps) => {
     const datasource = {
         getRows: async (params: any) => {
             const {startRow, endRow, sortModel, filterModel} = params.request;
@@ -50,17 +64,46 @@ export const GenericDataGrid = ({columns, onLoadData, onRowDoubleClick}: Generic
         params.api.setGridOption('serverSideDatasource', datasource);
     };
 
+    const getColumnDefs = () => {
+        const baseColumns = columns.map((column) => ({
+            headerName: column,
+            field: column,
+            sortable: true,
+            filter: "agTextColumnFilter",
+        }));
+
+        if (showEdit || showDelete) {
+            baseColumns.push({
+                headerName: "Actions",
+                field: "actions",
+                cellRenderer: (params: any) => (
+                    <div style={{display: "flex", gap: "10px"}}>
+                        {showEdit && (
+                            <IconButton onClick={() => onEdit && onEdit(params.data)} color="primary">
+                                <EditIcon/>
+                            </IconButton>
+                        )}
+                        {showDelete && (
+                            <IconButton onClick={() => onDelete && onDelete(params.data)} color="secondary">
+                                <DeleteIcon/>
+                            </IconButton>
+                        )}
+                    </div>
+                ),
+                sortable: false,
+                filter: false,
+                pinned: "right",
+            });
+        }
+
+        return baseColumns;
+    };
 
     return (
         <div className="ag-theme-alpine" style={{height: "500px", width: "100%", margin: "0 auto"}}>
             <AgGridReact
                 theme={"legacy"}
-                columnDefs={columns.map((column) => ({
-                    headerName: column,
-                    field: column,
-                    sortable: true,
-                    filter: "agTextColumnFilter", // TODO: check filtering
-                }))}
+                columnDefs={getColumnDefs()}
                 rowModelType={"serverSide"}
                 pagination={true}
                 paginationPageSize={20}

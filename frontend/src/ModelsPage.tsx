@@ -3,7 +3,7 @@ import { Button, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { GenericDataGrid } from "./GenericDataGrid";
 import { useNavigate } from "react-router-dom";
-import { listModels } from "./utils/api";
+import { deleteModel, listModels } from "./utils/api";
 
 export default function ModelsPage() {
     const navigate = useNavigate();
@@ -39,6 +39,17 @@ export default function ModelsPage() {
         navigate(`/models/${row.name}`);
     };
 
+    const handleDelete = async (row: any) => {
+        if (window.confirm(`Are you sure you want to delete model: ${row.name}?`)) {
+            try {
+                await deleteModel(row.name);
+                console.log("Model deleted successfully.");
+            } catch (error) {
+                console.error("Error deleting model:", error);
+            }
+        }
+    };
+
     return (
         <div>
             <Typography variant="h4" align="center" gutterBottom>
@@ -55,7 +66,13 @@ export default function ModelsPage() {
                     Import Model
                 </Button>
             </Grid>
-            <GenericDataGrid columns={columns} onLoadData={loadModels} onRowDoubleClick={handleRowDoubleClick}/>
+            <GenericDataGrid
+                columns={columns}
+                onLoadData={loadModels}
+                onRowDoubleClick={handleRowDoubleClick}
+                onDelete={handleDelete}
+                showDelete={true}
+            />
         </div>
     );
 }

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { GenericDataGrid } from "./GenericDataGrid";
 import { Typography } from "@mui/material";
-import { listGenericData } from "./utils/api";
+import { deleteGenericData, listGenericData } from "./utils/api";
 
 export default function DataPage() {
     const {name} = useParams<{ name: string }>();
@@ -37,8 +37,19 @@ export default function DataPage() {
         };
     };
 
-    const handleRowDoubleClick = (row: any) => {
+    const handleEdit = (row: any) => {
         navigate(`/models/${name}/details/${row._id}`, {state: {row}});
+    };
+
+    const handleDelete = async (row: any) => {
+        if (window.confirm(`Are you sure you want to delete this row?`)) {
+            try {
+                await deleteGenericData(name as string, row._id);
+                console.log("Row deleted successfully.");
+            } catch (error) {
+                console.error("Error deleting row:", error);
+            }
+        }
     };
 
     return (
@@ -49,7 +60,11 @@ export default function DataPage() {
             <GenericDataGrid
                 columns={columns}
                 onLoadData={loadData}
-                onRowDoubleClick={handleRowDoubleClick}
+                onRowDoubleClick={handleEdit}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                showEdit={true}
+                showDelete={true}
             />
         </div>
     );
