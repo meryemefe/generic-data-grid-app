@@ -30,6 +30,8 @@ body {
     min-width: 320px;
     min-height: 100vh;
     padding-top: 5%;
+    padding-bottom: 5%;
+    overflow: hidden; /* Prevent scrolling */
 }
 
 h1 {

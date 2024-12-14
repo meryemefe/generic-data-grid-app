@@ -1,5 +1,5 @@
 import "./App.css";
-import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
+import { AppBar, Toolbar, Typography, Box, Container } from "@mui/material";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import CreateOrImportModel from "./CreateOrImportModel.tsx";
 import DataDetailPage from "./DataDetailPage.tsx";
@@ -11,32 +11,51 @@ function App() {
 
     return (
         <Router>
-            <div>
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    height: "100vh",
+                    overflow: "hidden",
+                }}>
                 {/* Fixed Header */}
                 <AppBar position="fixed">
                     <Toolbar>
                         <Typography variant="h6" sx={{flexGrow: 1}} textAlign={"left"}>
                             FlexiGrid
                         </Typography>
-                        <Button color="inherit" component={Link} to="/">
-                            Home
-                        </Button>
-                        <Button color="inherit" component={Link} to="/models">
-                            Data Models
-                        </Button>
-                        <Button color="inherit">About</Button>
+                        <nav>
+                            <Link to="/" style={{margin: "0 10px", color: "white", textDecoration: "none"}}>
+                                Home
+                            </Link>
+                            <Link to="/models" style={{margin: "0 10px", color: "white", textDecoration: "none"}}>
+                                Data Models
+                            </Link>
+                            <Link to="/about" style={{margin: "0 10px", color: "white", textDecoration: "none"}}>
+                                About
+                            </Link>
+                        </nav>
                     </Toolbar>
                 </AppBar>
 
                 {/* Define Routes */}
-                <Routes>
-                    <Route path="/" element={<HomePage/>}/>
-                    <Route path="/models" element={<ModelsPage/>}/>
-                    <Route path="/create-or-import-model" element={<CreateOrImportModel/>}/>
-                    <Route path="/models/:name" element={<DataPage/>}/>
-                    <Route path="/models/:name/details/:id" element={<DataDetailPage/>}/>
-                </Routes>
-
+                <div
+                    style={{
+                        flex: 1,
+                        marginTop: "64px",
+                        marginBottom: "40px",
+                        overflow: "auto", // Make this area scrollable
+                    }}>
+                    <Container sx={{marginTop: 8}}>
+                        <Routes>
+                            <Route path="/" element={<HomePage/>}/>
+                            <Route path="/models" element={<ModelsPage/>}/>
+                            <Route path="/create-or-import-model" element={<CreateOrImportModel/>}/>
+                            <Route path="/models/:name" element={<DataPage/>}/>
+                            <Route path="/models/:name/details/:id" element={<DataDetailPage/>}/>
+                        </Routes>
+                    </Container>
+                </div>
                 {/* Fixed Footer */}
                 <Box
                     bgcolor="text.secondary"

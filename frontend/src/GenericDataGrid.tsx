@@ -79,12 +79,13 @@ export const GenericDataGrid = ({
                 cellRenderer: (params: any) => (
                     <div style={{display: "flex", gap: "10px"}}>
                         {showEdit && (
-                            <IconButton onClick={() => onEdit && onEdit(params.data)} color="primary">
+                            <IconButton size="small" color="primary" onClick={() => onEdit && onEdit(params.data)}>
                                 <EditIcon/>
                             </IconButton>
                         )}
                         {showDelete && (
-                            <IconButton onClick={() => onDelete && onDelete(params.data)} color="secondary">
+                            <IconButton size="small" color="secondary"
+                                        onClick={() => onDelete && onDelete(params.data)}>
                                 <DeleteIcon/>
                             </IconButton>
                         )}
@@ -100,7 +101,14 @@ export const GenericDataGrid = ({
     };
 
     return (
-        <div className="ag-theme-alpine" style={{height: "500px", width: "100%", margin: "0 auto"}}>
+        <div
+            className="ag-theme-alpine-dark"
+            style={{
+                height: "60vh",
+                margin: "0 auto",
+                paddingTop: "20px",
+            }}
+        >
             <AgGridReact
                 theme={"legacy"}
                 columnDefs={getColumnDefs()}
