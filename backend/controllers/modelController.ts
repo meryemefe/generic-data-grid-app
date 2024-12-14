@@ -139,3 +139,25 @@ export const listModels = async (req: Request, res: Response, next: NextFunction
     }
 };
 
+export const deleteModel = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+    try {
+        const {name} = req.params;
+        const db = getDb();
+
+        // Check if the model exists
+        const metadata = await db.collection("CollectionMetadata").findOne({name});
+        if (!metadata) {
+            return res.status(404).json({message: `Model '${name}' not found`});
+        }
+
+        // Remove the metadata for the model
+        await db.collection("CollectionMetadata").deleteOne({name});
+
+        // Drop the collection corresponding to the model
+        await db.collection(name).drop();
+
+        res.status(200).json({message: `Model '${name}' deleted successfully.`});
+    } catch (err) {
+        next(err);
+    }
+};
