@@ -73,6 +73,23 @@ export async function listModels(
     }
 }
 
+export async function deleteModel(name: string): Promise<any> {
+    try {
+        const response = await fetch(`${API_URL}/models/${name}`, {
+            method: "DELETE",
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error: ${response.statusText}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Error deleting model:", error);
+        throw error;
+    }
+}
+
 
 export async function listGenericData(
     modelName: string,
@@ -98,6 +115,23 @@ export async function listGenericData(
         return await response.json();
     } catch (error) {
         console.error("Error fetching model data:", error);
+        throw error;
+    }
+}
+
+export async function deleteGenericData(modelName: string, id: string): Promise<any> {
+    try {
+        const response = await fetch(`${API_URL}/generic/${modelName}/${id}`, {
+            method: "DELETE",
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error: ${response.statusText}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Error deleting model data:", error);
         throw error;
     }
 }
