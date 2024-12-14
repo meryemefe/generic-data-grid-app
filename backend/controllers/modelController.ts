@@ -48,18 +48,34 @@ export const importModel = async (req: Request, res: Response, next: NextFunctio
         const db = getDb(); // Get the database instance
         const filePath = req.file.path;
         const rows: any[] = [];
-        const schemaFields: Record<string, any> = {};
+        const columnTypes: Record<string, string> = {};
+
+        // Helper function to infer type based on value in CSV
+        const inferDataType = (value: any): string => {
+            if (!value || value.trim() === "") return "text";
+            if (!isNaN(Number(value))) return "number";
+            if (!isNaN(Date.parse(value))) return "date";
+            return "text";
+        };
 
         // Parse the CSV file
         fs.createReadStream(filePath)
             .pipe(csvParser())
             .on("headers", (headers: string[]) => {
                 headers.forEach((header) => {
-                    schemaFields[header] = true; // Mark fields as existing
+                    columnTypes[header] = ""; // Initialize column types
                 });
             })
             .on("data", (row) => {
                 rows.push(row);
+
+                // Infer column types based on the rows
+                for (const [key, value] of Object.entries(row)) {
+                    const inferredType = inferDataType(value);
+                    if (columnTypes[key] !== "text" && columnTypes[key] !== inferredType) {
+                        columnTypes[key] = inferredType;
+                    }
+                }
             })
             .on("end", async () => {
                 try {
@@ -69,14 +85,22 @@ export const importModel = async (req: Request, res: Response, next: NextFunctio
                         return res.status(400).json({message: `Model '${modelName}' already exists`});
                     }
 
+                    // Dynamically create a schema based on inferred column types
+                    const schemaFields = Object.entries(columnTypes).reduce((acc, [key, type]) => {
+                        acc[key] = {type};
+                        return acc;
+                    }, {} as Record<string, any>);
+
+                    console.log("Inferred schema fields:", schemaFields);
+
                     // Create the collection and insert the data
                     const collection = db.collection(modelName);
                     await collection.insertMany(rows);
 
-                    // Save metadata
+                    // Save metadata with field types
                     await db.collection("CollectionMetadata").insertOne({
                         name: modelName,
-                        fields: Object.keys(schemaFields),
+                        fields: schemaFields,
                         createdAt: new Date(),
                     });
 
