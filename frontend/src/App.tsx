@@ -2,6 +2,7 @@ import "./App.css";
 import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import CreateOrImportModel from "./CreateOrImportModel.tsx";
+import DataDetailPage from "./DataDetailPage.tsx";
 import ModelsPage from "./ModelsPage.tsx";
 import HomePage from "./Homepage.tsx";
 import DataPage from "./DataPage.tsx";
@@ -33,6 +34,7 @@ function App() {
                     <Route path="/models" element={<ModelsPage/>}/>
                     <Route path="/create-or-import-model" element={<CreateOrImportModel/>}/>
                     <Route path="/models/:name" element={<DataPage/>}/>
+                    <Route path="/models/:name/details/:id" element={<DataDetailPage/>}/>
                 </Routes>
 
                 {/* Fixed Footer */}

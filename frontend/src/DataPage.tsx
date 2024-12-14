@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { GenericDataGrid } from "./GenericDataGrid";
 import { Typography } from "@mui/material";
 import { listGenericData } from "./utils/api";
 
 export default function DataPage() {
     const {name} = useParams<{ name: string }>();
+    const navigate = useNavigate();
     const [columns, setColumns] = useState<string[]>([]);
 
     const loadData = async ({
@@ -36,14 +37,20 @@ export default function DataPage() {
         };
     };
 
+    const handleRowDoubleClick = (row: any) => {
+        navigate(`/models/${name}/details/${row._id}`, {state: {row}});
+    };
+
     return (
         <div>
             <Typography variant="h4" align="center" gutterBottom>
                 Data for Model: {name}
             </Typography>
-            <GenericDataGrid columns={columns} onLoadData={loadData} onRowDoubleClick={() => {
-                console.log("Row double-clicked");
-            }}/>
+            <GenericDataGrid
+                columns={columns}
+                onLoadData={loadData}
+                onRowDoubleClick={handleRowDoubleClick}
+            />
         </div>
     );
 }
