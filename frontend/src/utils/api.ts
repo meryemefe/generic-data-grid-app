@@ -22,7 +22,6 @@ export async function createModel(name: string, fields: string[]): Promise<any> 
 }
 
 export async function importModel(modelName: string, file: File): Promise<any> {
-    console.log("API URL", API_URL);
     const formData = new FormData();
     formData.append("modelName", modelName);
     formData.append("file", file);
@@ -40,6 +39,65 @@ export async function importModel(modelName: string, file: File): Promise<any> {
         return await response.json();
     } catch (error) {
         console.error("Model import error:", error);
+        throw error;
+    }
+}
+
+export async function listModels(
+    params: { page?: number; pageSize?: number; sortField?: string; sortOrder?: string; filter?: any }
+): Promise<any> {
+    try {
+        // Construct query string from params
+        const query = new URLSearchParams({
+            ...(params.page && {page: params.page.toString()}),
+            ...(params.pageSize && {pageSize: params.pageSize.toString()}),
+            ...(params.sortField && {sortField: params.sortField}),
+            ...(params.sortOrder && {sortOrder: params.sortOrder}),
+            ...(params.filter && params.filter.length > 0 && {filter: JSON.stringify(params.filter)}),
+        });
+
+        const url = `${API_URL}/models${query ? `?${query.toString()}` : ""}`;
+
+        const response = await fetch(url, {
+            method: "GET",
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error: ${response.statusText}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching models:", error);
+        throw error;
+    }
+}
+
+
+export async function listGenericData(
+    modelName: string,
+    params: { page?: number; pageSize?: number; sortField?: string; sortOrder?: string; filter?: any }
+): Promise<any> {
+    try {
+        const query = new URLSearchParams({
+            ...(params.page && {page: params.page.toString()}),
+            ...(params.pageSize && {pageSize: params.pageSize.toString()}),
+            ...(params.sortField && {sortField: params.sortField}),
+            ...(params.sortOrder && {sortOrder: params.sortOrder}),
+            ...(params.filter && params.filter.length > 0 && {filter: JSON.stringify(params.filter)}),
+        });
+
+        const response = await fetch(`${API_URL}/generic/${modelName}?${query.toString()}`, {
+            method: "GET",
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error: ${response.statusText}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Error fetching model data:", error);
         throw error;
     }
 }
