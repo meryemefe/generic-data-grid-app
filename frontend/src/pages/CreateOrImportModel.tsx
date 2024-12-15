@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 import {
     Box,
     Typography,
@@ -16,13 +16,17 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useState } from "react";
 import { createModel, importModel } from "../utils/api.ts";
 import FileUploader from "../components/FileUploader.tsx";
 
 const COLUMN_TYPES = ["text", "number", "date"];
 
 export default function CreateOrImportModel() {
-    const [tabIndex, setTabIndex] = useState("1");
+    const {state} = useLocation();
+    const defaultTab = state?.tab || "1";
+
+    const [tabIndex, setTabIndex] = useState(defaultTab);
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);

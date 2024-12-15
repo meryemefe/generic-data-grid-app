@@ -57,12 +57,21 @@ export default function ModelsPage() {
                 You can create new models or import existing ones. Double-click on a model to view its data.
             </Typography>
             <Grid container justifyContent="center" spacing={2} sx={{marginBottom: "20px"}}>
-                <Button variant="contained" color="primary" onClick={() => navigate("/create-or-import-model")}>
-                    Create New Model
-                </Button>
-                <Button variant="contained" color="primary" onClick={() => navigate("/create-or-import-model")}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => navigate("/create-or-import-model", {state: {tab: "1"}})}
+                >
                     Import Model
                 </Button>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => navigate("/create-or-import-model", {state: {tab: "2"}})}
+                >
+                    Create New Model
+                </Button>
+
             </Grid>
             <GenericDataGrid
                 columns={columns}
