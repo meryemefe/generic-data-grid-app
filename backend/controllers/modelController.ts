@@ -2,6 +2,7 @@ import csvParser from "csv-parser";
 import { NextFunction, Request, Response } from "express";
 import fs from "fs";
 import { getDb } from "../config/db";
+import { DbFilterProcessor } from "../utils/dbFilterProcessor";
 
 export const createModel = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     try {
@@ -152,37 +153,42 @@ export const listModels = async (req: Request, res: Response, next: NextFunction
     try {
         const db = getDb();
 
-        // Pagination
-        const page = parseInt(req.query.page as string) || 1;
-        const pageSize = parseInt(req.query.pageSize as string) || 20;
+        const fields = {
+            name: {
+                type: "string",
+            },
+            createdAt: {
+                type: "date",
+            }
+        };
 
-        // Sorting
-        const sortField = req.query.sortField as string || "_id"; // Default sort field
-        const sortOrder = req.query.sortOrder === "desc" ? -1 : 1; // Default to ascending
+        // Parse request body for filters, pagination, and sorting
+        const {
+            page = 1,
+            pageSize = 20,
+            sortField = "_id",
+            sortOrder = "asc",
+            filter = {},
+        } = req.body;
 
-        // Filtering
-        const filter = req.query.filter ? JSON.parse(req.query.filter as string) : {};
+        const order = sortOrder === "desc" ? -1 : 1;
 
-        // MongoDB query
-        const query = Object.entries(filter).reduce((acc, [key, value]) => {
-            // Example: If filter includes { name: "test" }, MongoDB will match { name: { $regex: "test", $options: "i" } }
-            acc[key] = {$regex: value, $options: "i"};
-            return acc;
-        }, {} as Record<string, any>);
+        // Construct MongoDB filters using the FilterProcessor utility
+        const mongoFilters = DbFilterProcessor.constructMongoFilters(filter, fields);
+        console.log("Mongo filters:", mongoFilters);
 
-        // Get total count for pagination
-        const total = await db.collection("CollectionMetadata").countDocuments(query);
-
-        // Get models with filtering, sorting, and pagination
-        const models = await db.collection("CollectionMetadata")
-            .find(query)
-            .sort({[sortField]: sortOrder})
+        // Fetch data with pagination, sorting, and filtering
+        const collection = db.collection("CollectionMetadata");
+        const total = await collection.countDocuments(mongoFilters);
+        const data = await collection
+            .find(mongoFilters)
+            .sort({[sortField]: order})
             .skip((page - 1) * pageSize)
             .limit(pageSize)
             .toArray();
 
         // Respond with models and total count
-        res.status(200).json({models, total});
+        res.status(200).json({models: data, total});
     } catch (err) {
         next(err);
     }

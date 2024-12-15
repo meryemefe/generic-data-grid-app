@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post('/models', createModel);
 router.post("/models/import", upload.single("file"), importModel);
-router.get("/models", listModels);
+router.post("/models/list", listModels);
 router.delete("/models/:name", deleteModel);
 
 export default router;

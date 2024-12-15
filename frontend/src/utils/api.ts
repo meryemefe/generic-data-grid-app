@@ -50,19 +50,12 @@ export async function listModels(
     params: { page?: number; pageSize?: number; sortField?: string; sortOrder?: string; filter?: any }
 ): Promise<any> {
     try {
-        // Construct query string from params
-        const query = new URLSearchParams({
-            ...(params.page && {page: params.page.toString()}),
-            ...(params.pageSize && {pageSize: params.pageSize.toString()}),
-            ...(params.sortField && {sortField: params.sortField}),
-            ...(params.sortOrder && {sortOrder: params.sortOrder}),
-            ...(params.filter && params.filter.length > 0 && {filter: JSON.stringify(params.filter)}),
-        });
-
-        const url = `${API_URL}/models${query ? `?${query.toString()}` : ""}`;
-
-        const response = await fetch(url, {
-            method: "GET",
+        const response = await fetch(`${API_URL}/models/list`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(params),
         });
 
         if (!response.ok) {
