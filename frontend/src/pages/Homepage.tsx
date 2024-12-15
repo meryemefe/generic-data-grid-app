@@ -1,7 +1,11 @@
 import { Typography, Button, Box, Paper } from "@mui/material";
 import Grid from "@mui/material/Grid2";
+import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
+
+    const navigate = useNavigate();
+
     return (
         <div
             style={{
@@ -53,6 +57,9 @@ export default function HomePage() {
                         fontWeight: "bold",
                         boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
                         "&:hover": {backgroundColor: "#f5f5f5"},
+                    }}
+                    onClick={() => {
+                        navigate("/models");
                     }}
                 >
                     Get Started
