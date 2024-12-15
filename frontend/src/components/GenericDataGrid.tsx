@@ -105,9 +105,9 @@ export const GenericDataGrid = ({
                     </div>
                 ),
                 sortable: false,
-                filter: false,
+                filter: false as any,
                 pinned: "right",
-            });
+            } as any);
         }
 
         return baseColumns;
