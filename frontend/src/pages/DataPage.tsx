@@ -38,7 +38,7 @@ export default function DataPage() {
     };
 
     const handleEdit = (row: any) => {
-        navigate(`/models/${name}/details/${row._id}`, {state: {row}});
+        navigate(`/models/${name}/details/${row._id}`, {state: {row, columns}});
     };
 
     const handleDelete = async (row: any) => {

@@ -135,3 +135,24 @@ export async function deleteGenericData(modelName: string, id: string): Promise<
         throw error;
     }
 }
+
+export async function updateGenericData(modelName: string, id: string, data: any): Promise<any> {
+    try {
+        const response = await fetch(`${API_URL}/generic/${modelName}/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error: ${response.statusText}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Error updating model data:", error);
+        throw error;
+    }
+}
