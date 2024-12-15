@@ -1,8 +1,8 @@
 import { Button, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import { GenericDataGrid } from "./components/GenericDataGrid.tsx";
+import { GenericDataGrid } from "../components/GenericDataGrid.tsx";
 import { useNavigate } from "react-router-dom";
-import { deleteModel, listModels } from "./utils/api";
+import { deleteModel, listModels } from "../utils/api.ts";
 
 export default function ModelsPage() {
     const navigate = useNavigate();

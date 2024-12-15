@@ -1,11 +1,11 @@
 import "./App.css";
 import { AppBar, Toolbar, Typography, Box, Container } from "@mui/material";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import CreateOrImportModel from "./CreateOrImportModel.tsx";
-import DataDetailPage from "./DataDetailPage.tsx";
-import ModelsPage from "./ModelsPage.tsx";
-import HomePage from "./Homepage.tsx";
-import DataPage from "./DataPage.tsx";
+import CreateOrImportModel from "./pages/CreateOrImportModel.tsx";
+import DataDetailPage from "./pages/DataDetailPage.tsx";
+import ModelsPage from "./pages/ModelsPage.tsx";
+import HomePage from "./pages/Homepage.tsx";
+import DataPage from "./pages/DataPage.tsx";
 
 function App() {
 

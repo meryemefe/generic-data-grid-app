@@ -16,8 +16,8 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { createModel, importModel } from "./utils/api";
-import FileUploader from "./components/FileUploader";
+import { createModel, importModel } from "../utils/api.ts";
+import FileUploader from "../components/FileUploader.tsx";
 
 const COLUMN_TYPES = ["text", "number", "date"];
 

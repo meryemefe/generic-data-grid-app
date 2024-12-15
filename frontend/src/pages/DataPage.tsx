@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { GenericDataGrid } from "./components/GenericDataGrid.tsx";
+import { GenericDataGrid } from "../components/GenericDataGrid.tsx";
 import { Typography } from "@mui/material";
-import { deleteGenericData, listGenericData } from "./utils/api";
+import { deleteGenericData, listGenericData } from "../utils/api.ts";
 
 export default function DataPage() {
     const {name} = useParams<{ name: string }>();
