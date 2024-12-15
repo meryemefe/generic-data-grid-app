@@ -1,6 +1,6 @@
 import { Button, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import { GenericDataGrid } from "./GenericDataGrid";
+import { GenericDataGrid } from "./components/GenericDataGrid.tsx";
 import { useNavigate } from "react-router-dom";
 import { deleteModel, listModels } from "./utils/api";
 
