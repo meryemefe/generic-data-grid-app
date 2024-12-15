@@ -1,5 +1,6 @@
 import { Button, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
+import { useState } from "react";
 import { GenericDataGrid } from "../components/GenericDataGrid.tsx";
 import { useNavigate } from "react-router-dom";
 import { deleteModel, listModels } from "../utils/api.ts";
@@ -7,6 +8,7 @@ import { deleteModel, listModels } from "../utils/api.ts";
 export default function ModelsPage() {
     const navigate = useNavigate();
     const columns = {name: {type: "string"}, createdAt: {type: "date"}}; // Predefined columns for models listing
+    const [refreshKey, setRefreshKey] = useState(0);
     const loadModels = async ({page, pageSize, sortField, sortOrder, filter}: {
         page: number;
         pageSize: number;
@@ -42,6 +44,7 @@ export default function ModelsPage() {
             try {
                 await deleteModel(row.name);
                 console.log("Model deleted successfully.");
+                setRefreshKey((prev) => prev + 1);
             } catch (error) {
                 console.error("Error deleting model:", error);
             }
@@ -74,6 +77,7 @@ export default function ModelsPage() {
 
             </Grid>
             <GenericDataGrid
+                key={refreshKey}
                 columns={columns}
                 onLoadData={loadModels}
                 onRowDoubleClick={handleRowDoubleClick}

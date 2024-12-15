@@ -8,6 +8,7 @@ export default function DataPage() {
     const {name} = useParams<{ name: string }>();
     const navigate = useNavigate();
     const [columns, setColumns] = useState<Record<string, { type: string }>>({}); // Updated for field types
+    const [refreshKey, setRefreshKey] = useState(0);
 
     const loadData = async ({
                                 page,
@@ -46,6 +47,7 @@ export default function DataPage() {
             try {
                 await deleteGenericData(name as string, row._id);
                 console.log("Row deleted successfully.");
+                setRefreshKey((prev) => prev + 1);
             } catch (error) {
                 console.error("Error deleting row:", error);
             }
@@ -58,6 +60,7 @@ export default function DataPage() {
                 Data for Model: {name}
             </Typography>
             <GenericDataGrid
+                key={refreshKey}
                 columns={columns}
                 onLoadData={loadData}
                 onRowDoubleClick={handleEdit}
