@@ -113,9 +113,32 @@ export const updateGenericData = async (req: Request, res: Response, next: NextF
         if (!result) {
             return res.status(500).json({message: `Error updating document with ID '${id}' in model '${modelName}'`});
         }
-        
+
         res.status(200).json(result);
     } catch (err) {
         next(err);
+    }
+};
+
+export const saveGenericData = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+    try {
+        const {modelName} = req.params;
+        const data = req.body;
+
+        if (!modelName || !data) {
+            return res.status(400).json({message: "Model name and data are required"});
+        }
+
+        const db = getDb();
+        const collection = db.collection(modelName);
+
+        const result = await collection.insertOne(data);
+        if (!result.insertedId) {
+            return res.status(500).json({message: "Error saving new row"});
+        }
+        return res.status(201).json({message: "New rows saved successfully"});
+    } catch (error) {
+        console.error("Error saving new rows:", error);
+        res.status(500).json({message: "Internal server error"});
     }
 };
