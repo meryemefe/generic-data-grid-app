@@ -92,7 +92,7 @@ export async function listGenericData(
     params: { page?: number; pageSize?: number; sortField?: string; sortOrder?: string; filter?: any }
 ): Promise<any> {
     try {
-        const response = await fetch(`${API_URL}/generic/${modelName}`, {
+        const response = await fetch(`${API_URL}/generic/${modelName}/list`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -146,6 +146,27 @@ export async function updateGenericData(modelName: string, id: string, data: any
         return await response.json();
     } catch (error) {
         console.error("Error updating model data:", error);
+        throw error;
+    }
+}
+
+export async function createGenericData(modelName: string, data: any): Promise<any> {
+    try {
+        const response = await fetch(`${API_URL}/generic/${modelName}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        });
+
+        if (!response.ok) {
+            throw new Error(`Error: ${response.statusText}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error("Error creating data:", error);
         throw error;
     }
 }

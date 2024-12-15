@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { GenericDataGrid } from "../components/GenericDataGrid.tsx";
-import { Container, Typography } from "@mui/material";
+import { Button, Container, Typography } from "@mui/material";
 import { deleteGenericData, listGenericData } from "../utils/api.ts";
 
 export default function DataPage() {
@@ -59,6 +59,15 @@ export default function DataPage() {
             <Typography variant="h4" align="center" gutterBottom>
                 Data for Model: {name}
             </Typography>
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={() =>
+                    navigate(`/models/${name}/create`, {state: {columns}})
+                }
+            >
+                Add New Data
+            </Button>
             <GenericDataGrid
                 key={refreshKey}
                 columns={columns}
