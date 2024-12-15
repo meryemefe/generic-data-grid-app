@@ -1,6 +1,7 @@
 import "./App.css";
 import { AppBar, Toolbar, Typography, Box } from "@mui/material";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import AboutPage from "./pages/AboutPage.tsx";
 import CreateOrImportModel from "./pages/CreateOrImportModel.tsx";
 import DataDetailPage from "./pages/DataDetailPage.tsx";
 import ModelsPage from "./pages/ModelsPage.tsx";
@@ -46,6 +47,7 @@ function App() {
                         <Route path="/create-or-import-model" element={<CreateOrImportModel/>}/>
                         <Route path="/models/:name" element={<DataPage/>}/>
                         <Route path="/models/:name/details/:id" element={<DataDetailPage/>}/>
+                        <Route path="/about" element={<AboutPage/>}/>
                     </Routes>
                 </div>
 
