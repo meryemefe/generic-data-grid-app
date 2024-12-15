@@ -76,3 +76,46 @@ export const deleteGenericData = async (req: Request, res: Response, next: NextF
         next(err);
     }
 };
+
+export const updateGenericData = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+    try {
+        const {modelName, id} = req.params;
+        const db = getDb();
+
+        // Validate inputs
+        if (!modelName || !id) {
+            return res.status(400).json({message: "Model name and ID are required"});
+        }
+
+        const updateData = req.body;
+
+        // Ensure the model exists
+        const model = await db.collection("CollectionMetadata").findOne({name: modelName});
+        if (!model) {
+            return res.status(404).json({message: `Model '${modelName}' not found`});
+        }
+
+        // Validate fields against the model schema
+        const schemaFields = model.fields || {};
+        for (const key of Object.keys(updateData)) {
+            if (!schemaFields[key]) {
+                return res.status(400).json({message: `Field '${key}' is not allowed`});
+            }
+        }
+
+        // Update the record
+        const result = await db.collection(modelName).findOneAndUpdate(
+            {_id: new ObjectId(id)},
+            {$set: updateData},
+            {returnDocument: "after"}
+        );
+
+        if (!result) {
+            return res.status(500).json({message: `Error updating document with ID '${id}' in model '${modelName}'`});
+        }
+        
+        res.status(200).json(result);
+    } catch (err) {
+        next(err);
+    }
+};
