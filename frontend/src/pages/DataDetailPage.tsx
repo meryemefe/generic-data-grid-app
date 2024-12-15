@@ -26,7 +26,7 @@ export default function DataDetailPage() {
     const {name} = useParams<{ name: string }>();
     const navigate = useNavigate();
     const {state} = useLocation();
-    const initialData = state?.row || {}; // Row data passed via navigation state
+    const {_id, ...initialData} = state?.row || {}; // Row data passed via navigation state
     const fieldTypes = state?.columns || {}; // Field types passed via navigation state
 
     const [data, setData] = useState(initialData);
@@ -40,7 +40,7 @@ export default function DataDetailPage() {
     const handleSave = async () => {
         setLoading(true);
         try {
-            const updatedData = await updateGenericData(name as string, data._id, data);
+            const updatedData = await updateGenericData(name as string, _id, data);
             setData(updatedData);
             setOpen(false);
         } catch (error) {
