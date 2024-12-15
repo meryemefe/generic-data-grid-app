@@ -50,8 +50,6 @@ export const GenericDataGrid = ({
                 filter,
             });
 
-            console.log(data, total);
-
             // re-render the grid
             params.success({
                 rowData: data,
@@ -128,6 +126,7 @@ export const GenericDataGrid = ({
                 rowModelType={"serverSide"}
                 pagination={true}
                 paginationPageSize={20}
+                cacheBlockSize={20}
                 onGridReady={onGridReady}
                 onRowDoubleClicked={(event) => onRowDoubleClick && onRowDoubleClick(event.data)}
             />
