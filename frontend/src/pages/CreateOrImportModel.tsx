@@ -55,8 +55,8 @@ export default function CreateOrImportModel() {
                 return;
             }
 
-            const response = await createModel(modelName, fields);
-            setMessage(`Model "${response.name}" created successfully!`);
+            await createModel(modelName, fields);
+            setMessage(`Model "${modelName}" created successfully!`);
         } catch (err: any) {
             setError(`Error creating model: ${err.message}`);
         } finally {
@@ -75,8 +75,8 @@ export default function CreateOrImportModel() {
         setError(null);
 
         try {
-            const response = await importModel(modelName, file);
-            setMessage(`Model "${response.modelName}" created and data imported successfully!`);
+            await importModel(modelName, file);
+            setMessage(`Model "${modelName}" created and data imported successfully!`);
             setFile(null);
         } catch (err: any) {
             setError(`Error importing model: ${err.message}`);
