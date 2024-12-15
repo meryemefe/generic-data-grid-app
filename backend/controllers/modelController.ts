@@ -67,6 +67,13 @@ export const importModel = async (req: Request, res: Response, next: NextFunctio
             return "text";
         };
 
+        // Helper function to convert value to its inferred type
+        const convertValue = (value: any, type: string): any => {
+            if (type === "number") return Number(value);
+            if (type === "date") return new Date(value);
+            return value; // Default to text
+        };
+
         // Parse the CSV file
         fs.createReadStream(filePath)
             .pipe(csvParser())
@@ -102,9 +109,18 @@ export const importModel = async (req: Request, res: Response, next: NextFunctio
 
                     console.log("Inferred schema fields:", schemaFields);
 
+                    // Convert rows to have correct data types
+                    const convertedRows = rows.map((row) =>
+                        Object.entries(row).reduce((convertedRow, [key, value]) => {
+                            const fieldType = columnTypes[key];
+                            convertedRow[key] = convertValue(value, fieldType);
+                            return convertedRow;
+                        }, {} as Record<string, any>)
+                    );
+
                     // Create the collection and insert the data
                     const collection = db.collection(modelName);
-                    await collection.insertMany(rows);
+                    await collection.insertMany(convertedRows);
 
                     // Save metadata with field types
                     await db.collection("CollectionMetadata").insertOne({
