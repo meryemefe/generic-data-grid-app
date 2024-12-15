@@ -3,7 +3,7 @@ import { deleteGenericData, listGenericData } from "../controllers/genericDataCo
 
 const router = express.Router();
 
-router.get("/generic/:modelName", listGenericData);
+router.post("/generic/:modelName", listGenericData);
 router.delete("/generic/:modelName/:id", deleteGenericData);
 
 export default router;

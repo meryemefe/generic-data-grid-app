@@ -99,16 +99,12 @@ export async function listGenericData(
     params: { page?: number; pageSize?: number; sortField?: string; sortOrder?: string; filter?: any }
 ): Promise<any> {
     try {
-        const query = new URLSearchParams({
-            ...(params.page && {page: params.page.toString()}),
-            ...(params.pageSize && {pageSize: params.pageSize.toString()}),
-            ...(params.sortField && {sortField: params.sortField}),
-            ...(params.sortOrder && {sortOrder: params.sortOrder}),
-            ...(params.filter && params.filter.length > 0 && {filter: JSON.stringify(params.filter)}),
-        });
-
-        const response = await fetch(`${API_URL}/generic/${modelName}?${query.toString()}`, {
-            method: "GET",
+        const response = await fetch(`${API_URL}/generic/${modelName}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(params),
         });
 
         if (!response.ok) {
@@ -121,6 +117,7 @@ export async function listGenericData(
         throw error;
     }
 }
+
 
 export async function deleteGenericData(modelName: string, id: string): Promise<any> {
     try {

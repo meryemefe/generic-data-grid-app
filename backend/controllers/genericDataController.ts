@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { ObjectId } from "mongodb";
 import { getDb } from "../config/db";
+import { DbFilterProcessor } from "../utils/dbFilterProcessor";
 
 export const listGenericData = async (req: Request, res: Response, next: NextFunction): Promise<any> => {
     try {
@@ -13,21 +14,29 @@ export const listGenericData = async (req: Request, res: Response, next: NextFun
             return res.status(404).json({message: `Model '${modelName}' not found`});
         }
 
-        const fields = model.fields || [];
+        const fields = model.fields || {};
 
-        // Parse query parameters
-        const page = parseInt(req.query.page as string) || 1;
-        const pageSize = parseInt(req.query.pageSize as string) || 20;
-        const sortField = req.query.sortField as string || "_id";
-        const sortOrder = req.query.sortOrder === "desc" ? -1 : 1;
-        const filter = req.query.filter ? JSON.parse(req.query.filter as string) : {};
+        // Parse request body for filters, pagination, and sorting
+        const {
+            page = 1,
+            pageSize = 20,
+            sortField = "_id",
+            sortOrder = "asc",
+            filter = {},
+        } = req.body;
+
+        const order = sortOrder === "desc" ? -1 : 1;
+
+        // Construct MongoDB filters using the FilterProcessor utility
+        const mongoFilters = DbFilterProcessor.constructMongoFilters(filter, fields);
+        console.log("Mongo filters:", mongoFilters);
 
         // Fetch data with pagination, sorting, and filtering
         const collection = db.collection(modelName);
-        const total = await collection.countDocuments(filter);
+        const total = await collection.countDocuments(mongoFilters);
         const data = await collection
-            .find(filter)
-            .sort({[sortField]: sortOrder})
+            .find(mongoFilters)
+            .sort({[sortField]: order})
             .skip((page - 1) * pageSize)
             .limit(pageSize)
             .toArray();
