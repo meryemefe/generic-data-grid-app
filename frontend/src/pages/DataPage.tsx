@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { GenericDataGrid } from "../components/GenericDataGrid.tsx";
-import { Typography } from "@mui/material";
+import { Container, Typography } from "@mui/material";
 import { deleteGenericData, listGenericData } from "../utils/api.ts";
 
 export default function DataPage() {
@@ -55,7 +55,7 @@ export default function DataPage() {
     };
 
     return (
-        <div>
+        <Container className={"main-content"}>
             <Typography variant="h4" align="center" gutterBottom>
                 Data for Model: {name}
             </Typography>
@@ -69,6 +69,6 @@ export default function DataPage() {
                 showEdit={true}
                 showDelete={true}
             />
-        </div>
+        </Container>
     );
 }

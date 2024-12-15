@@ -1,5 +1,5 @@
 import "./App.css";
-import { AppBar, Toolbar, Typography, Box, Container } from "@mui/material";
+import { AppBar, Toolbar, Typography, Box } from "@mui/material";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import CreateOrImportModel from "./pages/CreateOrImportModel.tsx";
 import DataDetailPage from "./pages/DataDetailPage.tsx";
@@ -39,26 +39,20 @@ function App() {
                 </AppBar>
 
                 {/* Define Routes */}
-                <div
-                    style={{
-                        flex: 1,
-                        marginTop: "64px",
-                        marginBottom: "40px",
-                        overflow: "auto", // Make this area scrollable
-                    }}>
-                    <Container sx={{marginTop: 8}}>
-                        <Routes>
-                            <Route path="/" element={<HomePage/>}/>
-                            <Route path="/models" element={<ModelsPage/>}/>
-                            <Route path="/create-or-import-model" element={<CreateOrImportModel/>}/>
-                            <Route path="/models/:name" element={<DataPage/>}/>
-                            <Route path="/models/:name/details/:id" element={<DataDetailPage/>}/>
-                        </Routes>
-                    </Container>
+                <div style={{flexGrow: 1, overflow: "auto"}}>
+                    <Routes>
+                        <Route path="/" element={<HomePage/>}/>
+                        <Route path="/models" element={<ModelsPage/>}/>
+                        <Route path="/create-or-import-model" element={<CreateOrImportModel/>}/>
+                        <Route path="/models/:name" element={<DataPage/>}/>
+                        <Route path="/models/:name/details/:id" element={<DataDetailPage/>}/>
+                    </Routes>
                 </div>
+
                 {/* Fixed Footer */}
                 <Box
-                    bgcolor="text.secondary"
+                    bgcolor="primary.dark"
+                    color="primary.contrastText"
                     py={0.5}
                     textAlign="center"
                     sx={{

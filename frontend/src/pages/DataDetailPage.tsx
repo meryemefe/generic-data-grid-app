@@ -16,7 +16,7 @@ import {
     DialogActions,
     DialogContent,
     DialogTitle,
-    IconButton,
+    IconButton, Container,
 } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import dayjs from "dayjs";
@@ -96,55 +96,57 @@ export default function DataDetailPage() {
     };
 
     return (
-        <Paper elevation={3} sx={{padding: "20px", margin: "20px"}}>
-            <Box display="flex" alignItems="center" mb={2}>
-                <IconButton onClick={() => navigate(-1)} sx={{mr: 1}}>
-                    <ArrowBackIcon/>
-                </IconButton>
-                <Typography variant="h4" align="center" flexGrow={1}>
-                    Details for Model: {name}
-                </Typography>
-            </Box>
-            <Table>
-                <TableBody>
-                    {Object.entries(data).map(([key, value]) => (
-                        <TableRow key={key}>
-                            <TableCell>
-                                <strong>{key}</strong>
-                            </TableCell>
-                            <TableCell>{renderField(key, value)}</TableCell>
-                        </TableRow>
-                    ))}
-                </TableBody>
-            </Table>
-            <Box mt={2} textAlign="center">
-                <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => setOpen(true)}
-                    disabled={loading}
-                >
-                    Save Changes
-                </Button>
-            </Box>
-            <Dialog open={open} onClose={() => setOpen(false)}>
-                <DialogTitle>Confirm Save</DialogTitle>
-                <DialogContent>
-                    Are you sure you want to save the changes?
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={() => setOpen(false)} color="secondary">
-                        Cancel
-                    </Button>
+        <Container className={"main-content"}>
+            <Paper elevation={3} sx={{padding: "20px", margin: "20px"}}>
+                <Box display="flex" alignItems="center" mb={2}>
+                    <IconButton onClick={() => navigate(-1)} sx={{mr: 1}}>
+                        <ArrowBackIcon/>
+                    </IconButton>
+                    <Typography variant="h4" align="center" flexGrow={1}>
+                        Details for Model: {name}
+                    </Typography>
+                </Box>
+                <Table>
+                    <TableBody>
+                        {Object.entries(data).map(([key, value]) => (
+                            <TableRow key={key}>
+                                <TableCell>
+                                    <strong>{key}</strong>
+                                </TableCell>
+                                <TableCell>{renderField(key, value)}</TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
+                <Box mt={2} textAlign="center">
                     <Button
-                        onClick={handleSave}
+                        variant="contained"
                         color="primary"
+                        onClick={() => setOpen(true)}
                         disabled={loading}
                     >
-                        {loading ? "Saving..." : "Save"}
+                        Save Changes
                     </Button>
-                </DialogActions>
-            </Dialog>
-        </Paper>
+                </Box>
+                <Dialog open={open} onClose={() => setOpen(false)}>
+                    <DialogTitle>Confirm Save</DialogTitle>
+                    <DialogContent>
+                        Are you sure you want to save the changes?
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={() => setOpen(false)} color="secondary">
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={handleSave}
+                            color="primary"
+                            disabled={loading}
+                        >
+                            {loading ? "Saving..." : "Save"}
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            </Paper>
+        </Container>
     );
 }

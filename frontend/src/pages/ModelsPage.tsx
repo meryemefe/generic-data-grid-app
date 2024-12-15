@@ -1,4 +1,4 @@
-import { Button, Typography } from "@mui/material";
+import { Button, Container, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { useState } from "react";
 import { GenericDataGrid } from "../components/GenericDataGrid.tsx";
@@ -52,7 +52,7 @@ export default function ModelsPage() {
     };
 
     return (
-        <div>
+        <Container className={"main-content"}>
             <Typography variant="h4" align="center" gutterBottom>
                 Data Models
             </Typography>
@@ -84,6 +84,6 @@ export default function ModelsPage() {
                 onDelete={handleDelete}
                 showDelete={true}
             />
-        </div>
+        </Container>
     );
 }

@@ -102,7 +102,7 @@ export default function CreateOrImportModel() {
     };
 
     return (
-        <Container>
+        <Container className={"main-content"}>
             <Typography variant="h4" align="center" gutterBottom>
                 Create or Import Model
             </Typography>
